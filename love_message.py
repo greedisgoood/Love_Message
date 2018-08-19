@@ -72,7 +72,7 @@ def send_news():
         love_word = file.readlines()[inLoveDays].split('：')[1]
 
     bot = Bot(cache_path=True, console_qr=False) # 热启动，不需要多次扫码登录
-    girlfriend = bot.friends().search('三三得玖')[0]
+    girlfriend = bot.friends().search('三三得玖')[0] #此处修改为您的好友名字，备注，微信号皆可。
     print(girlfriend)
     message = """
     亲爱的{}:
@@ -89,7 +89,7 @@ def send_news():
 
     files = os.listdir(pic_path)
     file = files[inLoveDays]
-    love_image_file = "D:\\python\\img\\" + file
+    love_image_file = "D:\\python\\img\\" + file  #“我爱你”图片文件目录
     try:
         girlfriend.send_image(love_image_file)
     except Exception as e:
@@ -119,7 +119,7 @@ if __name__ == '__main__':
     while True:
         curr_time = time.strftime("%Y-%m-%d %H:%M:%S", time.localtime())
         love_time = curr_time.split(" ")[1]
-        if love_time == "22:46:01":
+        if love_time == "22:46:01": #定时发送时间
             main()
             time.sleep(60)
         else:
