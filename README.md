@@ -22,7 +22,7 @@
     message = """
     亲爱的{}:
 
-    早上好，今天是你和 Koc 相恋的第 {} 天~
+    早上好，今天是你和 tonge相恋的第 {} 天~
 
     今天他想对你说的话是：
 
@@ -112,42 +112,30 @@ http://tieba.baidu.com/p/3108805355
 
 表白程序源码
 
-
-
-此次表白程序主要有 5 个函数
-
-
-
-
-
-
-
-crawl_Love_words()
-
-
+    crawl_Love_words()
 
 此函数通过 selenium + xpath 来抓取情话网站的资源，并存入到当前目录下的「love_word.txt」文件。
 
 
 
-def crawl_Love_words():
-    print("正在抓取情话...")
-    browser = webdriver.PhantomJS()
-    url = "http://www.binzz.com/yulu2/3588.html"
-    browser.get(url)
-    html = browser.page_source
-    Selector = etree.HTML(html)
-    love_words_xpath_str = "//div[@id='content']/p/text()"
-    love_words = Selector.xpath(love_words_xpath_str)
-    for i in love_words:
-        word = i.strip("\n\t\u3000\u3000").strip()
-        with open(love_word_path, "a") as file:
-            file.write(word + "\n")
-    print("情话抓取完成")
+    def crawl_Love_words():
+        print("正在抓取情话...")
+        browser = webdriver.PhantomJS()
+        url = "http://www.binzz.com/yulu2/3588.html"
+        browser.get(url)
+        html = browser.page_source
+        Selector = etree.HTML(html)
+        love_words_xpath_str = "//div[@id='content']/p/text()"
+        love_words = Selector.xpath(love_words_xpath_str)
+        for i in love_words:
+            word = i.strip("\n\t\u3000\u3000").strip()
+            with open(love_word_path, "a") as file:
+                file.write(word + "\n")
+        print("情话抓取完成")
 
 
 
-crawl_love_image()
+    crawl_love_image()
 
 
 
@@ -155,84 +143,84 @@ crawl_love_image()
 
 
 
-def crawl_love_image():
-    print("正在抓取我爱你图片...")
-    for i in range(1, 22):
-        url = "http://tieba.baidu.com/p/3108805355?pn={}".format(i)
-        response = requests.get(url)
-        html = response.text
-        pattern = re.compile(r'<div.*?class="d_post_content j_d_post_content.*?">.*?<img class="BDE_Image" src="(.*?)".*?>.*?</div>', re.S)
-        image_url = re.findall(pattern, html)
-        for j, data in enumerate(image_url):
-            pics = requests.get(data)
-            mkdir(pic_path)
-            fq = open(pic_path + '\\' + str(i) + "_" + str(j) + '.jpg', 'wb')  # 下载图片，并保存和命名
-            fq.write(pics.content)
-            fq.close()
-    print("图片抓取完成")
+    def crawl_love_image():
+        print("正在抓取我爱你图片...")
+        for i in range(1, 22):
+            url = "http://tieba.baidu.com/p/3108805355?pn={}".format(i)
+            response = requests.get(url)
+            html = response.text
+            pattern = re.compile(r'<div.*?class="d_post_content j_d_post_content.*?">.*?<img class="BDE_Image" src="(.*?)".*?>.*?</div>', re.S)
+            image_url = re.findall(pattern, html)
+            for j, data in enumerate(image_url):
+                pics = requests.get(data)
+                mkdir(pic_path)
+                fq = open(pic_path + '\\' + str(i) + "_" + str(j) + '.jpg', 'wb')  # 下载图片，并保存和命名
+                fq.write(pics.content)
+                fq.close()
+        print("图片抓取完成")
 
 
 
-mkdir(path)
+    mkdir(path)
 
 此函数用来在当前目录下创建一个新的文件夹，以便存储相应的数据。
 
-def mkdir(path):
-    folder = os.path.exists(path)
+    def mkdir(path):
+        folder = os.path.exists(path)
 
-    if not folder:  # 判断是否存在文件夹如果不存在则创建为文件夹
-        os.makedirs(path)  # makedirs 创建文件时如果路径不存在会创建这个路径
-        print("---  new folder...  ---")
-        print("---  OK  ---")
-    else:
-        print("正在保存图片中...")
+        if not folder:  # 判断是否存在文件夹如果不存在则创建为文件夹
+            os.makedirs(path)  # makedirs 创建文件时如果路径不存在会创建这个路径
+            print("---  new folder...  ---")
+            print("---  OK  ---")
+        else:
+            print("正在保存图片中...")
 
 
 
-send_new()
+    send_new()
 
 此函数通过利用 itchat 库，实现给你的微信好友自动发送消息。在这个函数中我利用 datetime 来计算你们之间相识相恋的时间。并且在登录的时候添加了一个「hotReload=True」，这样你就可以不用每次运行程序的时候都要登录。关于 itchat 更多的操作，大家可以去网上查找相应的资料。
 
-def send_news():
+    def send_news():
 
-    # 计算相恋天数
-    inLoveDate = datetime.datetime(2018, 8, 15) # 相恋的时间
-    todayDate = datetime.datetime.today()
-    inLoveDays = (todayDate - inLoveDate).days
+        # 计算相恋天数
+        inLoveDate = datetime.datetime(2018, 8, 15) # 相恋的时间
+        todayDate = datetime.datetime.today()
+        inLoveDays = (todayDate - inLoveDate).days
 
-    # 获取情话
-    file_path = os.getcwd() + '\\' + love_word_path
-    with open(file_path) as file:
-        love_word = file.readlines()[inLoveDays].split('：')[1]
+        # 获取情话
+        file_path = os.getcwd() + '\\' + love_word_path
+        with open(file_path) as file:
+            love_word = file.readlines()[inLoveDays].split('：')[1]
 
-    itchat.auto_login(hotReload=True) # 热启动，不需要多次扫码登录
-    my_friend = itchat.search_friends(name=u'你的好友名称')
-    girlfriend = my_friend[0]["UserName"]
-    print(girlfriend)
-    message = """
-    亲爱的{}:
+        itchat.auto_login(hotReload=True) # 热启动，不需要多次扫码登录
+        my_friend = itchat.search_friends(name=u'你的好友名称')
+        girlfriend = my_friend[0]["UserName"]
+        print(girlfriend)
+        message = """
+        亲爱的{}:
 
-    早上好，今天是你和 Koc 相恋的第 {} 天~
+        早上好，今天是你和 Koc 相恋的第 {} 天~
 
-    今天他想对你说的话是：
+        今天他想对你说的话是：
 
-    {}
+        {}
 
-    最后也是最重要的！
-    """.format("你的好友名称", str(inLoveDays), love_word)
-    itchat.send(message, toUserName=girlfriend)
+        最后也是最重要的！
+        """.format("你的好友名称", str(inLoveDays), love_word)
+        itchat.send(message, toUserName=girlfriend)
 
-    files = os.listdir(pic_path)
-    file = files[inLoveDays]
-    love_image_file = "D:\\img\\" + file
-    try:
-        itchat.send_image(love_image_file, toUserName=girlfriend)
-    except Exception as e:
-        print(e)
+        files = os.listdir(pic_path)
+        file = files[inLoveDays]
+        love_image_file = "D:\\img\\" + file
+        try:
+            itchat.send_image(love_image_file, toUserName=girlfriend)
+        except Exception as e:
+            print(e)
 
 
 
-main()
+    main()
 
 main() 函数就是我们主逻辑函数，程序运行的逻辑顺序就是在这个函数里规定的。在 main() 里我首先判断下当前路径下是否有「love_word.txt」文件，如果有则提示相应的信息，没有的话才去执 crawl_Love_words() 函数，去网上抓取一些情话数据。
 
